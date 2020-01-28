@@ -55,16 +55,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Button b = (Button) v; //not all views have text so we cast whatever widget that's
-                                       //pressed to a button,which has the ability, so we can append text.
+                //pressed to a button,which has the ability, so we can append text.
                 newNumber.append(b.getText().toString());
             }
         };
 
-        Button[] digiButtons = {button0,button1,button2,button3,button4,button5,button6,button7,button8,button9,buttonDot};
+        Button[] digiButtons = {button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, buttonDot};
         int i = 0;
-        while(i < digiButtons.length){
+        while (i < digiButtons.length) {
             digiButtons[i].setOnClickListener(listener);
-            i +=1;
+            i += 1;
         }
     /*
         button0.setOnClickListener(listener);
@@ -87,11 +87,11 @@ public class MainActivity extends AppCompatActivity {
                 Button b = (Button) v;
                 String ob = b.getText().toString();
                 String value = newNumber.getText().toString();
-                try{
+                try {
                     Double doubleValue = Double.valueOf(value);
-                    performOperation(doubleValue,ob);
+                    performOperation(doubleValue, ob);
 
-                }catch(NumberFormatException e){
+                } catch (NumberFormatException e) {
                     newNumber.setText("");
                 }
 
@@ -111,14 +111,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String value = newNumber.getText().toString();
-                if(value.length() == 0){
+                if (value.length() == 0) {
                     newNumber.setText("-");
-                }else{
-                    try{
+                } else {
+                    try {
                         Double doubleValue = Double.valueOf(value);
                         doubleValue *= -1;
                         newNumber.setText(doubleValue.toString());
-                    }catch(NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         newNumber.setText("");
                     }
                 }
@@ -126,26 +126,26 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void performOperation(Double value, String operation){
-        if(null == operand1){
+    private void performOperation(Double value, String operation) {
+        if (null == operand1) {
             operand1 = value;
-        }else{
+        } else {
             operand2 = value;
-            if(pendingOperation.equals("=")){
+            if (pendingOperation.equals("=")) {
                 pendingOperation = operation;
             }
-            switch(pendingOperation){
+            switch (pendingOperation) {
                 case "=":
                     operand1 = operand2;
                     break;
                 case "/":
-                    if(operand2 == 0){
+                    if (operand2 == 0) {
                         operand1 = 0.0;
-                    }else{
+                    } else {
                         operand1 /= operand2;
                     }
                     break;
-                case"X":
+                case "X":
                     operand1 *= operand2;
                     break;
                 case "-":
@@ -161,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //Method to restore instance state after configuration change
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -169,11 +170,12 @@ public class MainActivity extends AppCompatActivity {
         displayOperation.setText(pendingOperation);
     }
 
+    //Method to save instance state during configuration change
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(STATE_PENDING_OPERATION,pendingOperation);
-        if(operand1 != null){                           //Confirm that operand1 isn't null before we save state.
-            outState.putDouble(STATE_OPERAND,operand1);
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation);
+        if (operand1 != null) {                           //Confirm that operand1 isn't null before we save state.
+            outState.putDouble(STATE_OPERAND, operand1);
         }
 
         super.onSaveInstanceState(outState);
