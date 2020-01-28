@@ -133,6 +133,16 @@
         app:layout_constraintStart_toEndOf="@+id/buttonEquals" />
 
     <Button
+        android:id="@+id/buttonNeg"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="NEG"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/buttonAdd"
+        app:layout_constraintTop_toBottomOf="@+id/buttonAdd" />
+
+    <Button
         android:id="@+id/buttonDivide"
         android:layout_width="48dp"
         android:layout_height="wrap_content"

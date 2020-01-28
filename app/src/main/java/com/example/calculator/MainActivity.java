@@ -18,6 +18,10 @@ public class MainActivity extends AppCompatActivity {
     private Double operand2 = null;
     private String pendingOperation = "=";
 
+    //Declare key variables to save instance state
+    private static final String STATE_PENDING_OPERATION = "PendingOperation";
+    private static final String STATE_OPERAND = "Operand1";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +87,14 @@ public class MainActivity extends AppCompatActivity {
                 Button b = (Button) v;
                 String ob = b.getText().toString();
                 String value = newNumber.getText().toString();
-                if(value.length() != 0){
-                    performOperation(value,ob);
+                try{
+                    Double doubleValue = Double.valueOf(value);
+                    performOperation(doubleValue,ob);
+
+                }catch(NumberFormatException e){
+                    newNumber.setText("");
                 }
+
                 pendingOperation = ob;
                 displayOperation.setText(pendingOperation);
             }
@@ -95,13 +104,33 @@ public class MainActivity extends AppCompatActivity {
         buttonPlus.setOnClickListener(opListener);
         buttonMultiply.setOnClickListener(opListener);
         buttonDivide.setOnClickListener(opListener);
+
+        //Add a NEG button
+        Button buttonNeg = (Button) findViewById(R.id.buttonNeg);
+        buttonNeg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String value = newNumber.getText().toString();
+                if(value.length() == 0){
+                    newNumber.setText("-");
+                }else{
+                    try{
+                        Double doubleValue = Double.valueOf(value);
+                        doubleValue *= -1;
+                        newNumber.setText(doubleValue.toString());
+                    }catch(NumberFormatException e){
+                        newNumber.setText("");
+                    }
+                }
+            }
+        });
     }
 
-    private void performOperation(String value, String operation){
+    private void performOperation(Double value, String operation){
         if(null == operand1){
-            operand1 = Double.valueOf(value);
+            operand1 = value;
         }else{
-            operand2 = Double.valueOf(value);
+            operand2 = value;
             if(pendingOperation.equals("=")){
                 pendingOperation = operation;
             }
@@ -132,6 +161,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION);
+        operand1 = savedInstanceState.getDouble(STATE_OPERAND);
+        displayOperation.setText(pendingOperation);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(STATE_PENDING_OPERATION,pendingOperation);
+        if(operand1 != null){                           //Confirm that operand1 isn't null before we save state.
+            outState.putDouble(STATE_OPERAND,operand1);
+        }
+
+        super.onSaveInstanceState(outState);
+    }
 }
 
 
